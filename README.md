@@ -17,6 +17,11 @@ It will create a log file with the timestamp and the string format defined in th
 You can overwrite the log directory defined in the config file by passing the -d parameter:  
 `worklog.sh -p SOME_OTHER_PROJECT -s START -d path/to/log/here/events.log`  
 
+the list of all supported STATUS are:  
+START  
+PAUSE  
+RESUME  
+END  
 
 ### TODO
 - [] add option to query for total work hours of a given date.
