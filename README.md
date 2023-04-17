@@ -24,5 +24,5 @@ RESUME
 END  
 
 ### TODO
-- [] add option to query for total work hours of a given date.
-- [] add option to query for total work hours of a given date range.
+- [ ] add option to query for total work hours of a given date.
+- [ ] add option to query for total work hours of a given date range.
