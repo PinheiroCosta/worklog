@@ -1,5 +1,6 @@
 #!/usr/bin/bash 
-CONFIG_DIR=/home/romulo/Repos/worklog/conf/worklog.conf
+
+CONFIG_DIR="$PWD/../conf/worklog.conf"
 
 usage(){
 	# Show how to use the program
@@ -152,6 +153,12 @@ read_config_file(){
 }
 
 read_user_options(){
+	if [ "$#" -lt 4 ];then
+		echo "Missing obrigatory parameters"
+		usage
+		exit 1
+	fi	
+
 	while getopts "d:p:s:h" OPTION; do
 		case $OPTION in
 			p)	# Specify project name
@@ -160,7 +167,7 @@ read_user_options(){
 			d)	# Specify directory where the log will be saved
 				LOG_DIR="${OPTARG}"
 				;;
-			s)	# Specify status of the project [start,end,pause]
+			s)	# Specify status of the project [start,end,pause,resume]
 				if [[ "${OPTARG,,}" != "start" ]] &&
 					[[ "${OPTARG,,}" != "end" ]] &&
 					[[ "${OPTARG,,}" != "resume" ]] &&
@@ -175,10 +182,28 @@ read_user_options(){
 				exit 0
 				;;
 		esac
+
+		
 	done
 }
 
+check_for_config_file(){
+	# Check if global configuration is set, if not creates a new one in the user's home
+	NEW_CONFIG="$HOME/.config/worklog/worklog.conf"
+
+	if [ ! -f "$NEW_CONFIG" ]; then
+		echo "configuration file not found. Generating a new one now."
+		if [ ! -d "$HOME/.config/worklog" ];then
+			mkdir -v "$HOME/.config/worklog"
+		fi
+
+		cp "$CONFIG_DIR" "$NEW_CONFIG"
+		CONFIG_DIR="$NEW_CONFIG"
+	fi
+}
+
 main(){
+	check_for_config_file
 	read_config_file
 	read_user_options "$@"
 	check_status
@@ -188,7 +213,6 @@ main(){
 	shift "$((OPTIND-1))"				
 
 	EVENT_MESSAGE="$*"							
-
 	savelog "$EVENT_MESSAGE"					
 }
 
